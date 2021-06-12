@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .btn {
+    @apply inline-block font-normal text-center px-3 py-2 leading-normal text-base rounded cursor-pointer;
+  }
+
+  .btn-primary {
+    @apply text-white bg-blue-600;
+  }
+
+  .btn-primary:hover {
+    @apply text-white bg-blue-700
+  }
+
+}
