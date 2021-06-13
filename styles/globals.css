@@ -4,7 +4,7 @@
 
 @layer components {
   .btn {
-    @apply inline-block font-normal text-center px-3 py-2 leading-normal text-base rounded cursor-pointer;
+    @apply inline-block font-normal text-center px-3 py-1.5 leading-normal text-base rounded cursor-pointer focus:outline-none;
   }
 
   .btn-primary {
@@ -12,7 +12,19 @@
   }
 
   .btn-primary:hover {
-    @apply text-white bg-blue-700
+    @apply bg-blue-700;
+  }
+
+  .btn-default {
+    @apply text-black bg-white shadow-sm border border-gray-500;
+  }
+
+  .btn-default:hover {
+    @apply border-gray-600 shadow-md;
+  }
+
+  .h-full-youtube-list {
+    height: calc(100vh - 160px)
   }
 
 }
