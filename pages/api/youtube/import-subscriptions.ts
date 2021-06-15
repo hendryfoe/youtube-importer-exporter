@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { Fields, File } from 'formidable';
 import { IncomingForm } from 'formidable';
 import { promises as fs } from 'fs';
-import { getSession } from 'next-auth/client';
 import { getToken } from 'next-auth/jwt';
 import { YoutubeModel } from './export-subscriptions';
 import { IResponse, post } from '@utility/request';
@@ -83,24 +83,23 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   // parse form with a Promise wrapper
   const data = (await new Promise((resolve, reject) => {
     const form = new IncomingForm();
-    form.parse(req, (err, fields, files) => {
+    form.parse(req, (err: any, fields: Fields, files: { file: File }) => {
       if (err) {
         return reject(err);
       }
-      resolve({ fields, files });
+
+      resolve({ fields, file: files.file });
     });
-  })) as any;
+  }).catch(() => {
+    return res.status(400).json({ error: 'Gagal memproses file !' });
+  })) as { fields: Fields; file: File };
 
-  // console.log('data => ', data);
-
-  if (!data?.files?.file) {
+  if (!data.file) {
     return res.status(400).json({ error: 'File salah !' });
   }
 
   // read file from the temporary path
-  const contents = await fs.readFile(data?.files?.file?.path, {
-    encoding: 'utf8',
-  });
+  const contents = await fs.readFile(data.file.path, { encoding: 'utf8' });
 
   try {
     const result: YoutubeImportResponse = {
@@ -109,7 +108,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     };
     let contentsData = JSON.parse(contents);
     const payload = mapYoutubePayload(contentsData);
-    // console.log(payload);
     const responses = await importYoutubeData(token.accessToken, payload);
 
     responses.forEach(
@@ -130,7 +128,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     res.status(200).json(result);
   } catch (e) {
-    console.log(e);
     return res
       .status(400)
       .json({ error: 'Mohon tidak mengubah isi file yang sudah di Export !' });

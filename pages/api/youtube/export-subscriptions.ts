@@ -4,12 +4,12 @@ import {} from 'next-auth/client';
 import { getToken } from 'next-auth/jwt';
 const secret = process.env.SECRET;
 
-type YoutubeList = {
+interface YoutubeList {
   nextPageToken?: string;
   items: Array<any>;
 };
 
-export type YoutubeModel = {
+export interface YoutubeModel {
   id: string;
   title: string;
   description: string;

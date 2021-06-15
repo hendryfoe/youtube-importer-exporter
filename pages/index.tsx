@@ -26,7 +26,7 @@ export default function Home() {
   useEffect(() => {
     if (session) {
       const { email: storageKey } = session.user;
-      const youtubeData = storage.get(storageKey) as unknown as YoutubeModel[];
+      const youtubeData = storage.get(storageKey);
 
       if (isRefresh) {
         storage.remove(storageKey);
@@ -44,7 +44,7 @@ export default function Home() {
             return;
           }
 
-          storage.set(storageKey, data);
+          storage.set(storageKey, JSON.stringify(data));
           setYoutube(data);
           setRefresh(false);
 
@@ -53,7 +53,7 @@ export default function Home() {
 
         fetchYoutube();
       } else {
-        setYoutube(youtubeData);
+        setYoutube(JSON.parse(youtubeData));
       }
     }
   }, [session, isRefresh]);
@@ -87,7 +87,7 @@ export default function Home() {
     <>
       <main className="h-screen lg:w-1/2 md:w-3/4 mx-auto py-4">
         {!session && (
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between bg-gray-200 p-3 rounded">
             <div className="flex-initial">Silahkan login terlebih dahulu</div>
             <div className="flex-initial">
               <button className="btn btn-primary" onClick={() => signIn()}>
@@ -159,7 +159,7 @@ export default function Home() {
                       />
                     </div>
                     <div className="flex-initial">
-                      <h2>{dt.title}</h2>
+                      <a href={`https://www.youtube.com/channel/${dt.resourceId.channelId}`} target="_blank" className="text-blue-500 hover:underline hover:text-blue-600">{dt.title}</a>
                     </div>
                   </div>
                 );
