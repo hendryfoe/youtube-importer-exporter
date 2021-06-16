@@ -59,7 +59,7 @@ function mapYoutubeChannel(data: any[]): YoutubeModel[] {
   }));
 }
 
-export default async (
+const exportSubscription = async (
   req: NextApiRequest,
   res: NextApiResponse<YoutubeModel[] | { error: string }>
 ) => {
@@ -84,3 +84,5 @@ export default async (
     res.status(e.status).json(e.data);
   }
 };
+
+export default exportSubscription;

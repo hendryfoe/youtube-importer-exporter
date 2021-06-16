@@ -1,8 +1,9 @@
+import Image from 'next/image';
 import { signIn, signOut, useSession } from 'next-auth/client';
 import { useEffect, useState } from 'react';
 import { YoutubeModel } from '@api/youtube/export-subscriptions';
 
-function useStorage() {
+function Storage() {
   return {
     set(item: string, payload: any) {
       localStorage.setItem(item, payload);
@@ -17,13 +18,14 @@ function useStorage() {
 }
 
 export default function Home() {
-  const storage = useStorage();
   const [session, loading] = useSession();
   const [isRefresh, setRefresh] = useState<boolean>(false);
   const [youtubes, setYoutube] = useState<YoutubeModel[]>([]);
   const [file, setFile] = useState(null);
 
   useEffect(() => {
+    const storage = Storage();
+
     if (session) {
       const { email: storageKey } = session.user;
       const youtubeData = storage.get(storageKey);
@@ -152,14 +154,23 @@ export default function Home() {
                     key={dt.id}
                   >
                     <div className="flex-initial">
-                      <img
+                      <Image
                         className="w-full rounded"
                         src={dt.thumbnails.default.url}
                         alt={`image-${dt.id}`}
+                        width={88}
+                        height={88}
                       />
                     </div>
                     <div className="flex-initial">
-                      <a href={`https://www.youtube.com/channel/${dt.resourceId.channelId}`} target="_blank" className="text-blue-500 hover:underline hover:text-blue-600">{dt.title}</a>
+                      <a
+                        href={`https://www.youtube.com/channel/${dt.resourceId.channelId}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-blue-500 hover:underline hover:text-blue-600"
+                      >
+                        {dt.title}
+                      </a>
                     </div>
                   </div>
                 );

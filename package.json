@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "lint": "next lint"
   },
   "husky": {
     "hooks": {
@@ -21,7 +22,7 @@
   },
   "dependencies": {
     "formidable": "^1.2.2",
-    "next": "10.2.3",
+    "next": "11.0.0",
     "next-auth": "^3.26.1",
     "react": "17.0.2",
     "react-dom": "17.0.2"
@@ -31,6 +32,8 @@
     "@types/node": "^15.12.2",
     "@types/react": "^17.0.11",
     "autoprefixer": "^10.2.6",
+    "eslint": "^7.28.0",
+    "eslint-config-next": "^11.0.0",
     "husky": "^6.0.0",
     "lint-staged": "^11.0.0",
     "postcss": "^8.3.2",

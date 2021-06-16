@@ -65,7 +65,7 @@ async function importYoutubeData(
   return Promise.allSettled(promises);
 }
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const importSubscription = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method.toLocaleLowerCase() !== 'post') {
     return res.status(404).json({ error: 'Not Found' });
   }
@@ -133,3 +133,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       .json({ error: 'Mohon tidak mengubah isi file yang sudah di Export !' });
   }
 };
+
+export default importSubscription;
