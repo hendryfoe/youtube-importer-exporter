@@ -20,7 +20,9 @@
     "jsx": "preserve",
     "paths": {
       "@utility/*": ["utilities/*"],
-      "@api/*": ["pages/api/*"]
+      "@components/*": ["components/*"],
+      "@api/*": ["pages/api/*"],
+      "@hooks/*": ["hooks/*"]
     }
   },
   "include": [
