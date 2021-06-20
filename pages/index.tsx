@@ -1,27 +1,21 @@
-import Image from 'next/image';
-import { signIn, signOut, useSession } from 'next-auth/client';
-import { useEffect, useState } from 'react';
 import { YoutubeModel } from '@api/youtube/export-subscriptions';
+import { useToast } from '@components/toast';
+import { Storage } from '@utility/storage';
+import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
+import { Session } from 'next-auth';
+import { getSession, signIn, signOut } from 'next-auth/client';
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
 
-function Storage() {
-  return {
-    set(item: string, payload: any) {
-      localStorage.setItem(item, payload);
-    },
-    get(item: string) {
-      return localStorage.getItem(item);
-    },
-    remove(item) {
-      localStorage.removeItem(item);
-    },
-  };
+interface HomeProps {
+  session: Session;
 }
 
-export default function Home() {
-  const [session, loading] = useSession();
+export default function Home({ session }: HomeProps) {
   const [isRefresh, setRefresh] = useState<boolean>(false);
   const [youtubes, setYoutube] = useState<YoutubeModel[]>([]);
   const [file, setFile] = useState(null);
+  const toast = useToast();
 
   useEffect(() => {
     const storage = Storage();
@@ -70,6 +64,7 @@ export default function Home() {
   }
 
   async function onImportData() {
+    await fetch('/api/youtube/import-subscriptions');
     if (!file) {
       console.log('file not found');
       return;
@@ -92,7 +87,10 @@ export default function Home() {
           <div className="flex items-center justify-between bg-gray-200 p-3 rounded">
             <div className="flex-initial">Silahkan login terlebih dahulu</div>
             <div className="flex-initial">
-              <button className="btn btn-primary" onClick={() => signIn()}>
+              <button
+                className="btn btn-primary"
+                onClick={() => signIn('google')}
+              >
                 Login
               </button>
             </div>
@@ -181,4 +179,14 @@ export default function Home() {
       </main>
     </>
   );
+}
+
+export async function getServerSideProps(
+  context: GetServerSidePropsContext
+): Promise<GetServerSidePropsResult<HomeProps>> {
+  return {
+    props: {
+      session: await getSession(context),
+    },
+  };
 }
