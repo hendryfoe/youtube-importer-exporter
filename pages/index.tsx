@@ -43,8 +43,6 @@ export default function Home({ session }: HomeProps) {
           storage.set(storageKey, JSON.stringify(data));
           setYoutube(data);
           setRefresh(false);
-
-          console.log(data);
         };
 
         fetchYoutube();
@@ -64,7 +62,6 @@ export default function Home({ session }: HomeProps) {
   }
 
   async function onImportData() {
-    await fetch('/api/youtube/import-subscriptions');
     if (!file) {
       console.log('file not found');
       return;
@@ -77,7 +74,15 @@ export default function Home({ session }: HomeProps) {
       method: 'POST',
       body: formData,
     });
-    console.log('response => ', response);
+
+    if (response.ok) {
+      const result = await response.json();
+
+      console.log('success : ', result.successes)
+      console.log('errors : ', result.errors)
+
+      toast.notify(`success: ${result.successes.length} \n failures: ${result.errors.length}`);
+    }
   }
 
   return (
